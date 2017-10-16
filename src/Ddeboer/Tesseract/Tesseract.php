@@ -30,15 +30,22 @@ class Tesseract
      */
     protected $path;
     
+    /**
+     * Max tesseract script execution time
+     * @var float|int|null
+     */
+    protected $timeout;
     
     /**
      * Constructor
      * 
      * @param string $path Path to tesseract binary (optional)
+     * @param float|int|null Max tesseract script timeout (Default: 60 seconds)
      */
-    public function __construct($path = 'tesseract')
+    public function __construct($path = 'tesseract', $timeout = 60)
     {
         $this->path = $path;
+        $this->timeout = $timeout;
     }
     
     /**
@@ -126,6 +133,7 @@ class Tesseract
         
         $builder = ProcessBuilder::create($arguments);
         $process = $builder->getProcess();
+        $process->setTimeout($this->timeout);
         $process->run();
         
         if (!$process->isSuccessful()) {
